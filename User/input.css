@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.header{
+    background-color: lightgoldenrodyellow;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+
+}
+
+.navbar{
+    max-width: 1024px;
+    background-color: lightcyan;
+    margin: auto;
+    height: 50px;
+    color: gold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+
+}
