@@ -20,11 +20,6 @@ $product_id = isset($_GET['product_id']) ? intval($_GET['product_id']) : 0;
 if ($product_id > 0) {
     // Insert the product into the cart
     try {
-        // $stmt = $conn->prepare("INSERT INTO cart (user_id, product_id, created_at) VALUES (:user_id, :product_id, NOW())");
-        // $stmt->execute([
-        //     ':user_id' => $user_id,
-        //     ':product_id' => $product_id,
-        // ]);
 
         // Fetch product details for the session
         $stmt = $conn->prepare("SELECT * FROM products WHERE product_id = :product_id");
@@ -34,10 +29,6 @@ if ($product_id > 0) {
         if ($product) {
             $_SESSION['product'] = $product;
         }
-
-        // Redirect back to the cart page with success message
-        // header("Location: cart.php?success=1");
-        // exit();
     } catch (PDOException $e) {
         echo "Error adding to cart: " . $e->getMessage();
         exit();
