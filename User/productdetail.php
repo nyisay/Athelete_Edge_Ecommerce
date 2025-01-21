@@ -5,22 +5,15 @@ session_start();
 // Include database connection
 require_once "database.php";
 
-// Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php"); // Redirect to login page if not logged in
-    exit();
-}
 
 // // Get user_id from session
-$user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['user_id'] ?? "";
 
 // // Validate and get product_id from GET parameters
 $product_id = isset($_GET['product_id']) ? intval($_GET['product_id']) : 0;
 
 if ($product_id > 0) {
-    // Insert the product into the cart
     try {
-
         // Fetch product details for the session
         $stmt = $conn->prepare("SELECT * FROM products WHERE product_id = :product_id");
         $stmt->execute([':product_id' => $product_id]);
@@ -177,12 +170,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search']) && !empty($
                         </div>
                     </div>
 
-                    <!-- Add to Cart Button -->
-                    <div class="flex items-center space-x-4">
-                        <a href="addtocart.php?product_id=<?php echo $product['product_id']; ?>" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                            Add to Cart
-                        </a>
-                    </div>
+                    <?php
+                    if ($user_id) {
+                    ?>
+                        <!-- Add to Cart Button -->
+                        <div class="flex items-center space-x-4">
+                            <a href="addtocart.php?product_id=<?php echo $product['product_id']; ?>" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                                Add to Cart
+                            </a>
+                        </div>
+                    <?php
+                    }
+                    ?>
 
                     <button class="bg-gray-100 text-gray-600 px-6 py-2 rounded hover:bg-gray-200 transition">
                         Favourite

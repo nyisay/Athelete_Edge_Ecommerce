@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 try {
-    // Query to fetch cart items for the logged-in user
+    // Fetch cart items for the logged-in user
     $sql = "SELECT cart.product_id, products.name, products.price, products.image, cart.quantity 
             FROM cart 
             JOIN products ON cart.product_id = products.product_id 
@@ -22,12 +22,66 @@ try {
     $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $stmt->execute();
     $cart_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Fetch payment methods
+    $payment_sql = "SELECT payment_method_id, payment_name FROM payment_method";
+    $payment_stmt = $conn->prepare($payment_sql);
+    $payment_stmt->execute();
+    $payment_methods = $payment_stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    echo "Error fetching cart items: " . $e->getMessage();
+    echo "Error: " . $e->getMessage();
     exit();
 }
-?>
 
+// Handle the payment submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment'])) {
+    $status = "pending";    
+    $order_date = date('Y-m-d H:i:s');
+    $payment_method_id = $_POST['payment_method'];
+    $total = array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart_items));
+
+    try {
+        // Insert the order into the database
+        $order_sql = "INSERT INTO orders (user_id, order_date, status, total_amount, payment_method_id) 
+                      VALUES (:user_id, :order_date, :status, :total_amount, :payment_method_id)";
+        $order_stmt = $conn->prepare($order_sql);
+        $order_stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $order_stmt->bindParam(':order_date', $order_date);
+        $order_stmt->bindParam(':status', $status);
+        $order_stmt->bindParam(':total_amount', $total);
+        $order_stmt->bindParam(':payment_method_id', $payment_method_id, PDO::PARAM_INT);
+        $order_stmt->execute();
+
+        $order_id = $conn->lastInsertId();
+
+        // Insert each cart item into `order_items`
+        $sql_items = "INSERT INTO order_items (order_id, product_id, quantity, price) 
+                      VALUES (:order_id, :product_id, :quantity, :price)";
+        $stmt_items = $conn->prepare($sql_items);
+
+        foreach ($cart_items as $item) {
+            $stmt_items->bindParam(':order_id', $order_id, PDO::PARAM_INT);
+            $stmt_items->bindParam(':product_id', $item['product_id'], PDO::PARAM_INT);
+            $stmt_items->bindParam(':quantity', $item['quantity'], PDO::PARAM_INT);
+            $stmt_items->bindParam(':price', $item['price']);
+            $stmt_items->execute();
+        }
+
+        // Clear the user's cart after order completion
+        $sql_clear_cart = "DELETE FROM cart WHERE user_id = :user_id";
+        $stmt_clear_cart = $conn->prepare($sql_clear_cart);
+        $stmt_clear_cart->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt_clear_cart->execute();
+
+        // echo "Order placed successfully!";
+        header('Location: ordercomplete.php');
+        // Redirect to confirmation page or clear cart, if needed
+    } catch (PDOException $e) {
+        echo "Error placing order: " . $e->getMessage();
+        exit();
+    }
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -49,7 +103,6 @@ try {
                 <img src="/images/logoedit.png" alt="Logo" class="h-12 w-12 mr-3">
                 <span class="text-xl font-bold text-gray-700">Athlete Edge</span>
             </a>
-
             <!-- Navigation Links -->
             <nav class="flex space-x-6 items-center">
                 <a href="home.php" class="text-gray-800 hover:text-red-600 transition">Home</a>
@@ -57,7 +110,6 @@ try {
                 <a href="features.php" class="text-gray-800 hover:text-red-600 transition">Features</a>
                 <a href="categories.php" class="text-gray-800 hover:text-red-600 transition">Categories</a>
             </nav>
-
             <!-- Login and Sign-Up Buttons -->
             <div class="flex space-x-4 items-center">
                 <a href="login.php" class="bg-transparent text-gray-800 px-4 py-2 rounded hover:bg-gray-200 transition">
@@ -103,47 +155,31 @@ try {
                         </span>
                     </div>
                 </div>
-            </div>  
-
+            </div>
 
             <!-- Payment Details Section -->
             <div class="flex-1 bg-white shadow-md rounded-lg p-6">
                 <h2 class="text-xl font-medium text-gray-800 mb-4">Payment Details</h2>
-                <form action="process_payment.php" method="POST" class="space-y-4">
-                    <!-- Name -->
+                <form action="" method="POST" class="space-y-4">
+                    <!-- Payment Method -->
                     <div>
-                        <label for="name" class="block text-gray-700 font-medium mb-1">Full Name</label>
-                        <input type="text" id="name" name="name" class="w-full p-3 border rounded-md" required>
-                    </div>
-                    <!-- Address -->
-                    <div>
-                        <label for="address" class="block text-gray-700 font-medium mb-1">Address</label>
-                        <input type="text" id="address" name="address" class="w-full p-3 border rounded-md" required>
-                    </div>
-                    <!-- Card Details -->
-                    <div>
-                        <label for="cardNumber" class="block text-gray-700 font-medium mb-1">Card Number</label>
-                        <input type="text" id="cardNumber" name="cardNumber" class="w-full p-3 border rounded-md" required>
-                    </div>
-                    <div class="flex gap-4">
-                        <div class="flex-1">
-                            <label for="expiryDate" class="block text-gray-700 font-medium mb-1">Expiry Date</label>
-                            <input type="text" id="expiryDate" name="expiryDate" class="w-full p-3 border rounded-md" placeholder="MM/YY" required>
-                        </div>
-                        <div class="w-1/3">
-                            <label for="cvv" class="block text-gray-700 font-medium mb-1">CVV</label>
-                            <input type="text" id="cvv" name="cvv" class="w-full p-3 border rounded-md" required>
-                        </div>
+                        <label for="payment_method" class="block text-gray-700 font-medium mb-1">Payment Method</label>
+                        <select id="payment_method" name="payment_method" class="w-full p-3 border rounded-md" required>
+                            <?php foreach ($payment_methods as $method): ?>
+                                <option value="<?php echo htmlspecialchars($method['payment_method_id']); ?>">
+                                    <?php echo htmlspecialchars($method['payment_name']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                     <!-- Submit -->
-                    <button type="submit" class="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition">
+                    <button type="submit" name="payment" class="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition">
                         Complete Payment
                     </button>
                 </form>
             </div>
         </div>
     </div>
-
 </body>
 
 </html>

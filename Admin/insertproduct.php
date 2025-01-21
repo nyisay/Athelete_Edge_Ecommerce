@@ -31,28 +31,28 @@ if (isset($_POST['insert'])) {
     }
 
     $filename2 = $_FILES['second_image']['name'];
-    $uploadPath2 = "../images/" . $filename;
+    $uploadPath2 = "../images/" . $filename2;
     if (!move_uploaded_file($_FILES["second_image"]["tmp_name"], $uploadPath2)) {
         echo "Error uploading the file.";
         exit;
     }
 
-    $filename2 = $_FILES['third_image']['name'];
-    $uploadPath3 = "../images/" . $filename;
+    $filename3 = $_FILES['third_image']['name'];
+    $uploadPath3 = "../images/" . $filename3;
     if (!move_uploaded_file($_FILES["third_image"]["tmp_name"], $uploadPath3)) {
         echo "Error uploading the file.";
         exit;
     }
 
-    $filename2 = $_FILES['fourth_image']['name'];
-    $uploadPath4 = "../images/" . $filename;
+    $filename4 = $_FILES['fourth_image']['name'];
+    $uploadPath4 = "../images/" . $filename4;
     if (!move_uploaded_file($_FILES["fourth_image"]["tmp_name"], $uploadPath4)) {
         echo "Error uploading the file.";
         exit;
     }
 
-    $filename2 = $_FILES['fifth_image']['name'];
-    $uploadPath5 = "../images/" . $filename;
+    $filename5 = $_FILES['fifth_image']['name'];
+    $uploadPath5 = "../images/" . $filename5;
     if (!move_uploaded_file($_FILES["fifth_image"]["tmp_name"], $uploadPath5)) {
         echo "Error uploading the file.";
         exit;

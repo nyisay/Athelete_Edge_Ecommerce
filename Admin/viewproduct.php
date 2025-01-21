@@ -34,7 +34,7 @@ try {
                 <li><a href="dashboard.php" class="block py-2 px-4 rounded hover:bg-indigo-600">Dashboard</a></li>
                 <li><a href="viewproducts.php" class="block py-2 px-4 rounded bg-indigo-600">View Products</a></li>
                 <li><a href="insertproduct.php" class="block py-2 px-4 rounded hover:bg-indigo-600">Add New Product</a></li>
-                <li><a href="orders.php" class="block py-2 px-4 rounded hover:bg-indigo-600">View Orders</a></li>
+                <li><a href="vieworder.php" class="block py-2 px-4 rounded hover:bg-indigo-600">View Orders</a></li>
                 <li><a href="customers.php" class="block py-2 px-4 rounded hover:bg-indigo-600">Manage Customers</a></li>
                 <li><a href="reports.php" class="block py-2 px-4 rounded hover:bg-indigo-600">Reports</a></li>
                 <li><a href="logout.php" class="block py-2 px-4 rounded hover:bg-indigo-600">Logout</a></li>

@@ -4,7 +4,7 @@ if (!isset($_SESSION)) {
 }
 require_once "database.php";
 try {
-    $sql = "SELECT * FROM products Limit 4";
+    $sql = "SELECT * FROM products Limit 8";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search']) && !empty($
 
 <body class="bg-gray-100">
     <!---------------------- Navbar ------------------------>
-    <?php include'header.php'; ?>
+    <?php include 'header.php'; ?>
 
 
     <!-- Video Banner -->
@@ -208,17 +208,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search']) && !empty($
                 if (isset($products)) {
                     foreach ($products as $product) { ?>
                         <!-- Product Card -->
-                        <div class="bg-white rounded-lg shadow p-6 text-center">
-                            <img src="/images/<?php echo $product['image']; ?>" alt="Product 1" class="h-100 w-full object-cover rounded mb-4">
+                        <div class="bg-white rounded-lg shadow p-2 text-center">
+                            <img src="/images/<?php echo $product['image']; ?>" alt="Product 1" class="h-[60%] w-full object-cover rounded mb-4">
                             <h3 class="text-lg font-semibold mb-2"><?php echo $product['name']; ?></h3>
                             <p class="text-gray-600 mb-4"><?php echo $product['description']; ?></p>
                             <span class="text-blue-600 font-bold text-lg"><?php echo '$' . number_format($product['price'], 2); ?></span>
-                            <div class="mt-4">
+                            <div class="mt-4 mr-4 flex justify-center space-x-4">
+                                <?php
+                                if ($user_id) {
+                                    echo "
+                                        <a href='addCart.php?product_id=$product[product_id]' class='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'>
+                                            Add to Cart
+                                        </a>
+                                    ";
+                                } else {
+                                    echo "
+                                        <a href='loginform.php' class='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'>
+                                            Add to Cart
+                                        </a>
+                                    ";
+                                }
+
+                                ?>
                                 <?php
                                 echo "
-                                <a href='addCart.php?product_id=$product[product_id]' class='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'>
-                                    Add to Cart
-                                </a>
+                               
                                  <a href='productdetail.php?product_id=$product[product_id]' class='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'>
                                     Detail
                                 </a>
