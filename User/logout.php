@@ -3,7 +3,7 @@ if(!isset($_SESSION)){
     session_start();
 }
 
-if($_SESSION['adminLoginSuccess'] ){
+if($_SESSION['userLoginSuccess'] ){
     session_destroy();
     header('Location: home.php');
 }else{

@@ -13,6 +13,13 @@ try {
     echo $e->getMessage();
 }
 
+$message = '';
+if (isset($_SESSION['adminLoginSuccess'])) {
+    $message = $_SESSION['adminLoginSuccess'];
+    unset($_SESSION['adminLoginSuccess']); // Clear the message after displaying it
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -23,21 +30,64 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <title>View Products</title>
+    <style>
+        .alert-box {
+            position: fixed;
+            top: 20px;
+            right: 50%;
+            transform: translateX(-50%);
+            background-color: #4caf50; /* Success green */
+            color: white;
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: fadeInOut 5s ease forwards;
+        }
+
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100 flex">
+    <!-- Animated Alert -->
+    <?php if (!empty($message)) { ?>
+        <div class="alert-box">
+            <?php echo $message; ?>
+        </div>
+    <?php } ?>  
+
+
     <!-- Sidebar -->
-    <div class="bg-indigo-500 text-white w-64 p-6">
+    <div class="bg-gray-800 text-white w-64 p-6">
         <h2 class="text-2xl font-bold mb-6">Admin Dashboard</h2>
         <nav>
             <ul class="space-y-4">
-                <li><a href="dashboard.php" class="block py-2 px-4 rounded hover:bg-indigo-600">Dashboard</a></li>
-                <li><a href="viewproducts.php" class="block py-2 px-4 rounded bg-indigo-600">View Products</a></li>
-                <li><a href="insertproduct.php" class="block py-2 px-4 rounded hover:bg-indigo-600">Add New Product</a></li>
-                <li><a href="vieworder.php" class="block py-2 px-4 rounded hover:bg-indigo-600">View Orders</a></li>
-                <li><a href="customers.php" class="block py-2 px-4 rounded hover:bg-indigo-600">Manage Customers</a></li>
-                <li><a href="reports.php" class="block py-2 px-4 rounded hover:bg-indigo-600">Reports</a></li>
-                <li><a href="logout.php" class="block py-2 px-4 rounded hover:bg-indigo-600">Logout</a></li>
+                <li><a href="dashboard.php" class="block py-2 px-4 rounded hover:bg-yellow-600">Dashboard</a></li>
+                <li><a href="viewproduct.php" class="block py-2 px-4 rounded bg-yellow-600">View Products</a></li>
+                <li><a href="insertproduct.php" class="block py-2 px-4 rounded hover:bg-yellow-600">Add New Product</a></li>
+                <li><a href="vieworder.php" class="block py-2 px-4 rounded hover:bg-yellow-600">View Orders</a></li>
+                <li><a href="viewcustomers.php" class="block py-2 px-4 rounded hover:bg-yellow-600">Manage Customers</a></li>
+                <li><a href="reports.php" class="block py-2 px-4 rounded hover:bg-yellow-600">Reports</a></li>
+                <li><a href="../User/logout.php" class="block py-2 px-4 rounded hover:bg-yellow-600">Logout</a></li>
             </ul>
         </nav>
     </div>
@@ -58,7 +108,7 @@ try {
 
             <table class="min-w-full bg-white border border-gray-300 rounded-lg table-auto">
                 <thead>
-                    <tr class="bg-gray-200">
+                    <tr class="bg-gray-600 text-white">
                         <th class="py-3 px-4 border-b text-left">ID</th>
                         <th class="py-3 px-4 border-b text-left">Name</th>
                         <th class="py-3 px-4 border-b text-left">Description</th>
@@ -80,10 +130,10 @@ try {
                                 <td class="py-3 px-4 border-b text-center"><?php echo htmlspecialchars($product['quantity']); ?></td>
                                 <td class="py-3 px-4 border-b"><?php echo htmlspecialchars($product['category_name']); ?></td>
                                 <td class="py-3 px-4 border-b text-center">
-                                    <img src="<?php echo htmlspecialchars($product['image']); ?>" alt="Product Image" class="h-16 w-16 object-cover rounded">
+                                    <img src="<?php echo htmlspecialchars($product['image']); ?>" alt="Product Image" class="h-18 w-18 object-cover rounded-xl">
                                 </td>
                                 <td class="py-3 px-4 border-b text-center space-y-2">
-                                    <a href="updateproduct.php?product_id=<?= $product['product_id'] ?>" class="inline-block bg-indigo-500 text-white py-2 px-4 rounded-md shadow hover:bg-indigo-600 focus:outline-none">Update</a>
+                                    <a href="updateproduct.php?product_id=<?= $product['product_id'] ?>" class="inline-block bg-yellow-400 text-white py-2 px-4 rounded-md shadow hover:bg-yellow-500 focus:outline-none">Update</a>
                                     <a href="delete.php?product_id=<?= $product['product_id'] ?>" class="inline-block bg-red-500 text-white py-2 px-4 rounded-md shadow hover:bg-red-600 focus:outline-none">Delete</a>
                                 </td>
                             </tr>
@@ -100,4 +150,3 @@ try {
 </body>
 
 </html>
-

@@ -5,5 +5,9 @@ if(!isset($_SESSION)){
 
 if($_SESSION['adminLoginSuccess']){
     session_destroy();
+    header('Location: loginform.php');
+}
+else{
+    session_destroy();
 }
 ?>

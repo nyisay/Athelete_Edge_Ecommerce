@@ -4,7 +4,7 @@ if (!isset($_SESSION)) {
 }
 require_once "database.php";
 try {
-    $sql = "SELECT * FROM products Limit 8";
+    $sql = "SELECT * FROM products Limit 4";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -45,6 +45,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search']) && !empty($
 } else {
     $searchProduct = "Please enter a product name or category.";
 }
+
+
+$message = '';
+if (isset($_SESSION['userLoginSuccess'])) {
+    $message = $_SESSION['userLoginSuccess'];
+    unset($_SESSION['userLoginSuccess']); // Clear the message after displaying it
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -60,22 +69,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search']) && !empty($
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Google Fonts Link -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <style>
+        .alert-box {
+            position: fixed;
+            top: 20px;
+            left: 50%; /* Center horizontally */
+            transform: translateX(-50%);
+            background-color: #4caf50; /* Success green */
+            color: white;
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: fadeInOut 5s ease forwards;
+        }
+
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100">
+    <!-- Animated Alert -->
+    <?php if (!empty($message)) { ?>
+        <div class="alert-box z-10">
+            <?php echo $message; ?>
+        </div>
+    <?php } ?>  
+
     <!---------------------- Navbar ------------------------>
     <?php include 'header.php'; ?>
 
 
     <!-- Video Banner -->
     <section class="relative">
-        <video autoplay loop muted playsinline class="w-full h-[600px] object-cover">
+        <video autoplay loop muted playsinline class="w-full h-[560px] object-cover">
             <source src="/images/For our beloved athletes.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
         <div class="absolute inset-0 flex items-center justify-center">
             <!-- Shop Now Button -->
-            <a href="#products"
+            <a href="product.php"
                 class="absolute bottom-4 right-64 bg-blue-500 text-white text-lg px-6 py-3 rounded shadow hover:bg-blue-600 transition">
                 Shop Now
             </a>
@@ -208,36 +259,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search']) && !empty($
                 if (isset($products)) {
                     foreach ($products as $product) { ?>
                         <!-- Product Card -->
-                        <div class="bg-white rounded-lg shadow p-2 text-center">
-                            <img src="/images/<?php echo $product['image']; ?>" alt="Product 1" class="h-[60%] w-full object-cover rounded mb-4">
-                            <h3 class="text-lg font-semibold mb-2"><?php echo $product['name']; ?></h3>
-                            <p class="text-gray-600 mb-4"><?php echo $product['description']; ?></p>
-                            <span class="text-blue-600 font-bold text-lg"><?php echo '$' . number_format($product['price'], 2); ?></span>
-                            <div class="mt-4 mr-4 flex justify-center space-x-4">
-                                <?php
-                                if ($user_id) {
-                                    echo "
-                                        <a href='addCart.php?product_id=$product[product_id]' class='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'>
+                        <div class="bg-white rounded-lg shadow-lg flex flex-col">
+                            <!-- Image Container -->
+                            <div class="w-full h-100 overflow-hidden rounded-lg flex items-center justify-center bg-gray-100">
+                                <img src="/images/<?php echo $product['image']; ?>"
+                                    alt="<?php echo $product['name']; ?>"
+                                    class="h-full w-auto object-contain">
+                            </div>
+                            <!-- Product Content -->
+                            <div class="flex flex-col flex-grow p-6 text-center">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2"><?php echo $product['name']; ?></h3>
+                                <p class="text-gray-600 text-sm mb-4 line-clamp-2"><?php echo $product['description']; ?></p>
+                                <span class="text-blue-600 font-bold text-xl mb-4"><?php echo '$' . number_format($product['price'], 2); ?></span>
+                                <div class="mt-auto flex justify-center space-x-4">
+                                    <?php if ($user_id) { ?>
+                                        <a href="addCart.php?product_id=<?php echo $product['product_id']; ?>"
+                                            class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition">
                                             Add to Cart
                                         </a>
-                                    ";
-                                } else {
-                                    echo "
-                                        <a href='loginform.php' class='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'>
+                                    <?php } else { ?>
+                                        <a href="loginform.php"
+                                            class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition">
                                             Add to Cart
                                         </a>
-                                    ";
-                                }
-
-                                ?>
-                                <?php
-                                echo "
-                               
-                                 <a href='productdetail.php?product_id=$product[product_id]' class='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'>
-                                    Detail
-                                </a>
-                                "
-                                ?>
+                                    <?php } ?>
+                                    <a href="productdetail.php?product_id=<?php echo $product['product_id']; ?>"
+                                        class="bg-gray-500 text-white px-4 py-2 rounded-full hover:bg-gray-600 transition">
+                                        Details
+                                    </a>
+                                </div>
                             </div>
                         </div>
                 <?php }
@@ -245,6 +295,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search']) && !empty($
             </div>
         </div>
     </section>
+
+
 
     <!-- Footer -->
     <footer class="bg-gray-800 text-gray-400 py-8">

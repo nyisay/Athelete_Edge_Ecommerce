@@ -71,40 +71,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove']) && isset($_
     </style>
 </head>
 
+<?php include 'header.php'; ?>
+
 <body class="bg-[url('../images/background.png')] bg-cover bg-center bg-no-repeat">
 
-    <!-- Navbar -->
-    <header class="bg-white/30 backdrop-blur-lg shadow-lg">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="home.php" class="flex items-center">
-                <img src="/images/logoedit.png" alt="Logo" class="h-12 w-12 mr-3">
-                <span class="text-xl font-bold text-gray-700">Athlete Edge</span>
-            </a>
-
-            <nav class="flex space-x-6 items-center">
-                <a href="home.php" class="text-gray-800 hover:text-red-600 transition">Home</a>
-                <a href="about.php" class="text-gray-800 hover:text-red-600 transition">About</a>
-                <a href="features.php" class="text-gray-800 hover:text-red-600 transition">Features</a>
-                <a href="categories.php" class="text-gray-800 hover:text-red-600 transition">Categories</a>
-
-                <form action="search_results.php" method="POST" class="flex items-center space-x-2">
-                    <input type="text" name="search" placeholder="Search products..." class="px-4 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-600 transition">
-                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
-                        Search
-                    </button>
-                </form>
-            </nav>
-
-            <div class="flex space-x-4 items-center">
-                <a href="login.php" class="bg-transparent text-gray-800 px-4 py-2 rounded hover:bg-gray-200 transition">
-                    Login
-                </a>
-                <a href="signup.php" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
-                    Sign Up
-                </a>
-            </div>
-        </div>
-    </header>
+    
 
     <!-- Cart Section -->
     <section class="py-16 rounded-lg shadow-lg backdrop-blur-md mx-4 md:mx-auto max-w-6xl">
@@ -149,13 +120,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove']) && isset($_
                             <a href="checkout.php" class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition">
                                 Proceed to Checkout
                             </a>
-                            <a href="home.php" class="bg-gray-100 text-gray-600 px-6 py-2 rounded hover:bg-gray-200 transition">
+                            <a href="product.php" class="bg-gray-100 text-gray-600 px-6 py-2 rounded hover:bg-gray-200 transition">
                                 Continue Shopping
                             </a>
                         </div>
                     </div>
                 <?php else : ?>
-                    <p class="text-xl text-gray-600">Your cart is empty. <a href="home.php" class="text-red-600 underline">Start shopping now!</a></p>
+                    <p class="text-xl text-gray-600">Your cart is empty. <a href="product.php" class="text-red-600 underline">Start shopping now!</a></p>
                 <?php endif; ?>
             </div>
         </div>

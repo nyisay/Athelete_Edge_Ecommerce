@@ -26,10 +26,11 @@ if (isset($_POST["login"]) && $_SERVER['REQUEST_METHOD'] == "POST") {
                     $_SESSION['name'] = $user['name'];
                     $_SESSION['email'] = $user['email'];
                     $_SESSION['role'] = $user['role'];
+                    $_SESSION['role'] = $user['role'];
                     if ($user['role'] == "admin") {
                         $_SESSION['adminLoginSuccess'] = "Admin Login Success!";
                         $_SESSION['logged_in'] = true;
-                        header("Location: viewproduct.php");
+                        header("Location: ../Admin/viewproduct.php");
                         exit;
                     } else {
                         $_SESSION['userLoginSuccess'] = "User Login Success!";

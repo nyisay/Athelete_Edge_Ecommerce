@@ -81,97 +81,123 @@ if (isset($_POST['insert'])) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Insert Products</title>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
-    <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-lg">
-        <h1 class="text-2xl font-bold mb-4 text-gray-800">Add New Product</h1>
-        <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" 
-              class="space-y-4" enctype="multipart/form-data">
-            <!-- Product Name -->
-            <div>
-                <label for="name" class="block text-sm font-medium text-gray-700">Product Name</label>
-                <input type="text" id="name" name="name" required
-                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-            </div>
 
-            <!-- Description -->
-            <div>
-                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                <textarea id="description" name="description" rows="4" required
-                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
-            </div>
+<body class="bg-gray-100 min-h-screen">
 
-            <!-- Price -->
-            <div>
-                <label for="price" class="block text-sm font-medium text-gray-700">Price ($)</label>
-                <input type="number" id="price" name="price" step="0.01" required
-                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-            </div>
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="bg-gray-800 text-white w-64 p-6">
+            <h2 class="text-2xl font-bold mb-6">Admin Dashboard</h2>
+            <nav>
+                <ul class="space-y-4">
+                    <li><a href="dashboard.php" class="block py-2 px-4 rounded hover:bg-yellow-600">Dashboard</a></li>
+                    <li><a href="viewproduct.php" class="block py-2 px-4 rounded hover:bg-yellow-600">View Products</a></li>
+                    <li><a href="insertproduct.php" class="block py-2 px-4 rounded bg-yellow-600">Add New Product</a></li>
+                    <li><a href="vieworder.php" class="block py-2 px-4 rounded hover:bg-yellow-600">View Orders</a></li>
+                    <li><a href="viewcustomers.php" class="block py-2 px-4 rounded hover:bg-yellow-600">Manage Customers</a></li>
+                    <li><a href="reports.php" class="block py-2 px-4 rounded hover:bg-yellow-600">Reports</a></li>
+                    <li><a href="logout.php" class="block py-2 px-4 rounded hover:bg-yellow-600">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
 
-            <!-- Quantity -->
-            <div>
-                <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
-                <input type="number" id="quantity" name="quantity" required
-                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-            </div>
+        <!-- Main Content -->
+        <div class="container mx-auto p-6 flex-1">
+            <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-lg mx-auto">
+                <h1 class="text-2xl font-bold mb-4 text-gray-800">Add New Product</h1>
+                <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" class="space-y-4" enctype="multipart/form-data">
+                    <!-- Product Name -->
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Product Name</label>
+                        <input type="text" id="name" name="name" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
 
-            <!-- Category -->
-            <div>
-                <label for="categories" class="block text-sm font-medium text-gray-700">Category</label>
-                <select id="categories" name="categories" required
-                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                    <option value="" selected disabled>Choose Category</option>
-                    <?php
-                    if (isset($categories)) {
-                        foreach ($categories as $category) {
-                            echo "<option value='{$category['category_id']}'>{$category['name']}</option>";
-                        }
-                    }
-                    ?>
-                </select>
-            </div>
+                    <!-- Description -->
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                        <textarea id="description" name="description" rows="4" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                    </div>
 
-            <!-- Image -->
-            <div>
-                <label for="image" class="block text-sm font-medium text-gray-700">Product Image</label>
-                <input type="file" id="image" name="image" accept="image/*" required
-                    class="mt-1 block w-full text-gray-700 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-            </div>
-            <div>
-                <label for="image" class="block text-sm font-medium text-gray-700">Product Image</label>
-                <input type="file" id="second_image" name="second_image" accept="image/*" required
-                    class="mt-1 block w-full text-gray-700 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-            </div>
-            <div>
-                <label for="image" class="block text-sm font-medium text-gray-700">Product Image</label>
-                <input type="file" id="third_image" name="third_image" accept="image/*" required
-                    class="mt-1 block w-full text-gray-700 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-            </div>
-            <div>
-                <label for="image" class="block text-sm font-medium text-gray-700">Product Image</label>
-                <input type="file" id="fourth_image" name="fourth_image" accept="image/*" required
-                    class="mt-1 block w-full text-gray-700 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-            </div>
-            <div>
-                <label for="image" class="block text-sm font-medium text-gray-700">Product Image</label>
-                <input type="file" id="fifth_image" name="fifth_image" accept="image/*" required
-                    class="mt-1 block w-full text-gray-700 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-            </div>
+                    <!-- Price -->
+                    <div>
+                        <label for="price" class="block text-sm font-medium text-gray-700">Price ($)</label>
+                        <input type="number" id="price" name="price" step="0.01" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
 
-            <!-- Submit Button -->
-            <button type="submit" name="insert"
-                class="w-full bg-indigo-500 text-white py-2 px-4 rounded-md shadow hover:bg-indigo-600">
-                Add Product
-            </button>
-        </form>
+                    <!-- Quantity -->
+                    <div>
+                        <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
+                        <input type="number" id="quantity" name="quantity" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+
+                    <!-- Category -->
+                    <div>
+                        <label for="categories" class="block text-sm font-medium text-gray-700">Category</label>
+                        <select id="categories" name="categories" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                            <option value="" selected disabled>Choose Category</option>
+                            <?php
+                            if (isset($categories)) {
+                                foreach ($categories as $category) {
+                                    echo "<option value='{$category['category_id']}'>{$category['name']}</option>";
+                                }
+                            }
+                            ?>
+                        </select>
+                    </div>
+
+                    <!-- Images -->
+                    <div>
+                        <label for="image" class="block text-sm font-medium text-gray-700">Product Image</label>
+                        <input type="file" id="image" name="image" accept="image/*" required
+                            class="mt-1 block w-full text-gray-700 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+
+                    <div>
+                        <label for="second_image" class="block text-sm font-medium text-gray-700">Product Image</label>
+                        <input type="file" id="second_image" name="second_image" accept="image/*" required
+                            class="mt-1 block w-full text-gray-700 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+
+                    <div>
+                        <label for="third_image" class="block text-sm font-medium text-gray-700">Product Image</label>
+                        <input type="file" id="third_image" name="third_image" accept="image/*" required
+                            class="mt-1 block w-full text-gray-700 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+
+                    <div>
+                        <label for="fourth_image" class="block text-sm font-medium text-gray-700">Product Image</label>
+                        <input type="file" id="fourth_image" name="fourth_image" accept="image/*" required
+                            class="mt-1 block w-full text-gray-700 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+
+                    <div>
+                        <label for="fifth_image" class="block text-sm font-medium text-gray-700">Product Image</label>
+                        <input type="file" id="fifth_image" name="fifth_image" accept="image/*" required
+                            class="mt-1 block w-full text-gray-700 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" name="insert"
+                        class="w-full bg-yellow-400 black-white py-2 px-4 rounded-md shadow hover:bg-yellow-500">
+                        Add Product
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
+
 </body>
+
 </html>
-
-
-
