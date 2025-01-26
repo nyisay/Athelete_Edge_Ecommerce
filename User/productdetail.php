@@ -152,8 +152,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search']) && !empty($
                     <?php if ($user_id) { ?>
                         <!-- Add to Cart Button -->
                         <div class="flex items-center space-x-4 mb-4">
-                            <a href="addtocart.php?product_id=<?php echo $product['product_id']; ?>"
-                                class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition shadow-lg">
+                            <a href="addCart.php?product_id=<?php echo $product['product_id']; ?>"
+                                class="bg-red-600 text-white px-6 py-3 rounded hover:bg-red-700 transition shadow-lg">
                                 Add to Cart
                             </a>
                             <button

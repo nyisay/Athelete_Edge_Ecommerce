@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search']) && !empty($
 $message = '';
 if (isset($_SESSION['userLoginSuccess'])) {
     $message = $_SESSION['userLoginSuccess'];
-    unset($_SESSION['userLoginSuccess']); // Clear the message after displaying it
+    unset($_SESSION['userLoginSuccess']); 
 }
 
 
@@ -70,19 +70,20 @@ if (isset($_SESSION['userLoginSuccess'])) {
     <!-- Google Fonts Link -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
     <style>
-        .alert-box {
+    .alert-box {
             position: fixed;
             top: 20px;
-            left: 50%; /* Center horizontally */
+            left: 45%;
             transform: translateX(-50%);
-            background-color: #4caf50; /* Success green */
+            background-color: #4caf50;
             color: white;
             padding: 16px 20px;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
             opacity: 0;
             transform: translateY(-20px);
-            animation: fadeInOut 5s ease forwards;
+            animation: fadeInOut 3s ease forwards;
+            z-index: 1000;
         }
 
         @keyframes fadeInOut {

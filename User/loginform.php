@@ -33,7 +33,7 @@ if (isset($_POST["login"]) && $_SERVER['REQUEST_METHOD'] == "POST") {
                         header("Location: ../Admin/viewproduct.php");
                         exit;
                     } else {
-                        $_SESSION['userLoginSuccess'] = "User Login Success!";
+                        $_SESSION['userLoginSuccess'] = "Login Success!";
                         header("Location: home.php");
                         exit;
                     }

@@ -77,82 +77,86 @@ try {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
         integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 
 <?php include 'header.php'; ?>
 
-<body class="bg-[url('../images/background.png')] bg-cover bg-center bg-no-repeat backdrop-blur-lg shadow-lg">
+<body class="bg-gray-100 font-poppins">
 
     <section id="products" class="py-16">
-        <div class="container mx-auto">
-            <h2 class="text-4xl font-extrabold text-center text-gray-800 mb-12">Products</h2>
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-extrabold text-center text-gray-800 mb-12">Our Products</h2>
 
-            <div class="flex flex-col lg:flex-row gap-6">
+            <div class="flex flex-col lg:flex-row gap-10">
                 <!-- Filter Form -->
-                <div class="w-3/4 lg:w-1/6 p-6 rounded-lg shadow-md backdrop-blur-sm">
+                <div class="w-full lg:w-1/4 bg-white p-6 rounded-lg shadow-lg">
                     <form id="filter-form" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
-                        <h3 class="text-xl font-semibold mb-4">Filter Products</h3>
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-6">Filter Products</h3>
 
                         <!-- Category Filter -->
-                        <div class="mb-6">
-                            <h4 class="font-medium text-gray-700 mb-2">Category</h4>
+                        <div class="mb-8">
+                            <h4 class="font-semibold text-gray-600 mb-4">Category</h4>
                             <?php foreach ($categories as $category) { ?>
                                 <div class="flex items-center mb-2">
-                                    <input type="radio" name="category" value="<?php echo $category['name']; ?>" class="form-check-input" <?php echo ($category['name'] == $categoryFilter) ? 'checked' : ''; ?>>
-                                    <label for="form-check-label" class="ml-2"><?php echo $category['name']; ?></label>
+                                    <input type="radio" name="category" value="<?php echo $category['name']; ?>" class="form-radio text-blue-600 focus:ring-0" <?php echo ($category['name'] == $categoryFilter) ? 'checked' : ''; ?>>
+                                    <label class="ml-2 text-gray-700"><?php echo $category['name']; ?></label>
                                 </div>
                             <?php } ?>
                         </div>
 
                         <!-- Price Range Filter -->
-                        <div class="mb-6">
-                            <h4 class="font-medium text-gray-700 mb-2">Price Range</h4>
-                            <div class="flex gap-4">
+                        <div class="mb-8">
+                            <h4 class="font-semibold text-gray-600 mb-4">Price Range</h4>
+                            <div class="space-y-3">
                                 <div>
-                                    <input type="radio" id="price_0_50" name="price_range" value="0-50" <?php echo ($priceFilter == '0-50') ? 'checked' : ''; ?> class="form-check-input">
-                                    <label for="price_0_50">$0 - $50</label>
+                                    <input type="radio" id="price_0_50" name="price_range" value="0-50" <?php echo ($priceFilter == '0-50') ? 'checked' : ''; ?> class="form-radio text-blue-600 focus:ring-0">
+                                    <label for="price_0_50" class="text-gray-700">$0 - $50</label>
                                 </div>
                                 <div>
-                                    <input type="radio" id="price_51_100" name="price_range" value="51-100" <?php echo ($priceFilter == '51-100') ? 'checked' : ''; ?> class="form-check-input">
-                                    <label for="price_51_100">$51 - $100</label>
+                                    <input type="radio" id="price_51_100" name="price_range" value="51-100" <?php echo ($priceFilter == '51-100') ? 'checked' : ''; ?> class="form-radio text-blue-600 focus:ring-0">
+                                    <label for="price_51_100" class="text-gray-700">$51 - $100</label>
                                 </div>
                                 <div>
-                                    <input type="radio" id="price_101_200" name="price_range" value="101-200" <?php echo ($priceFilter == '101-200') ? 'checked' : ''; ?> class="form-check-input">
-                                    <label for="price_101_200">$101 - $200</label>
+                                    <input type="radio" id="price_101_200" name="price_range" value="101-200" <?php echo ($priceFilter == '101-200') ? 'checked' : ''; ?> class="form-radio text-blue-600 focus:ring-0">
+                                    <label for="price_101_200" class="text-gray-700">$101 - $200</label>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Filter Apply Button -->
-                        <button type="submit" name="save" class="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 mb-4">Apply Filters</button>
-
-                        <!-- Reset Button with JavaScript -->
-                        <button type="button" id="reset-btn" class="w-full bg-gray-500 text-white py-2 rounded hover:bg-gray-600">Reset Filters</button>
+                        <!-- Buttons -->
+                        <button type="submit" name="save" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">Apply Filters</button>
+                        <button type="button" id="reset-btn" class="w-full bg-gray-500 text-white py-2 mt-4 rounded-lg hover:bg-gray-600 transition">Reset Filters</button>
                     </form>
                 </div>
 
                 <!-- Product Grid -->
                 <div class="w-full lg:w-3/4">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                         <?php
                         if (isset($filteredProducts) && !empty($filteredProducts)) {
                             foreach ($filteredProducts as $product) { ?>
-                                <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col h-full">
+                                <div class="bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow">
                                     <div class="relative">
                                         <img src="/images/<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>" class="w-full h-80 object-cover rounded-t-lg">
                                     </div>
-                                    <div class="p-6 flex-1">
-                                        <h3 class="text-xl font-bold text-gray-700 mb-2 h-14 overflow-hidden">
+                                    <div class="p-4">
+                                        <h3 class="text-lg font-bold text-gray-800 mb-2 truncate">
                                             <?php echo $product['name']; ?>
                                         </h3>
-                                        <div class="flex items-center justify-between">
-                                            <span class="text-lg font-bold text-blue-600"><?php echo '$' . number_format($product['price'], 2); ?></span>
+                                        <p class="text-blue-600 font-semibold text-lg mb-4">
+                                            <?php echo '$' . number_format($product['price'], 2); ?>
+                                        </p>
+                                        <div class="flex justify-around items-center">
+                                            <a href="productdetail.php?product_id=<?php echo $product['product_id']; ?>"
+                                                class="bg-gray-500 text-white px-4 py-2 rounded-3xl hover:bg-gray-600 transition">
+                                                Details
+                                            </a>
+                                            <a href="addCart.php?product_id=<?php echo $product['product_id']; ?>"
+                                                class="bg-red-500 text-white px-4 py-2 rounded-3xl hover:bg-red-600 transition">
+                                                Add to Cart
+                                            </a>
                                         </div>
-                                    </div>
-                                    <div class="px-6 pb-6 mt-auto">
-                                        <a href="productdetail.php?product_id=<?php echo $product['product_id']; ?>" class="block bg-gray-500 text-white text-center py-1 px-4 rounded hover:bg-gray-600 transition-color mb-2">View Detail</a>
-                                        <a href="addCart.php?product_id=<?php echo $product['product_id']; ?>" class="block bg-gray-500 text-white text-center py-1 px-4 rounded hover:bg-gray-600 transition-colors">Add to Cart</a>
                                     </div>
                                 </div>
                         <?php }
@@ -175,8 +179,6 @@ try {
             window.location.href = window.location.pathname;
         });
     </script>
-
-
 
 </body>
 

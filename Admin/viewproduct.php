@@ -34,16 +34,17 @@ if (isset($_SESSION['adminLoginSuccess'])) {
         .alert-box {
             position: fixed;
             top: 20px;
-            right: 50%;
+            left: 45%;
             transform: translateX(-50%);
-            background-color: #4caf50; /* Success green */
+            background-color: #4caf50;
             color: white;
             padding: 16px 20px;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
             opacity: 0;
             transform: translateY(-20px);
-            animation: fadeInOut 5s ease forwards;
+            animation: fadeInOut 3s ease forwards;
+            z-index: 1000;
         }
 
         @keyframes fadeInOut {
@@ -51,14 +52,17 @@ if (isset($_SESSION['adminLoginSuccess'])) {
                 opacity: 0;
                 transform: translateY(-20px);
             }
+
             10% {
                 opacity: 1;
                 transform: translateY(0);
             }
+
             90% {
                 opacity: 1;
                 transform: translateY(0);
             }
+
             100% {
                 opacity: 0;
                 transform: translateY(-20px);
@@ -73,7 +77,7 @@ if (isset($_SESSION['adminLoginSuccess'])) {
         <div class="alert-box">
             <?php echo $message; ?>
         </div>
-    <?php } ?>  
+    <?php } ?>
 
 
     <!-- Sidebar -->
@@ -95,7 +99,10 @@ if (isset($_SESSION['adminLoginSuccess'])) {
     <!-- Main Content -->
     <div class="flex-1 p-6">
         <div class="bg-white shadow-md rounded-lg p-6 w-full">
-            <h1 class="text-2xl font-bold mb-4 text-gray-800">Product List</h1>
+            <div class="flex items-center mb-4">
+                <img src="/images//logoedit.png" alt="Logo" class="h-10 w-10 mr-2">
+                <h1 class="text-2xl font-bold text-gray-800">Product List</h1>
+            </div>
 
             <?php if (isset($_SESSION['insertSuccess'])): ?>
                 <div class="bg-green-100 text-green-700 p-3 rounded mb-4">

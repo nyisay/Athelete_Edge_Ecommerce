@@ -1,95 +1,158 @@
-<?php
-// Include database connection
-include('database.php');
-
-// Fetch total products
-$query_products = "SELECT COUNT(*) AS total_products FROM products";
-$result_products = mysqli_query($conn, $query_products);
-$row_products = mysqli_fetch_assoc($result_products);
-$total_products = $row_products['total_products'];
-
-// Fetch total orders
-$query_orders = "SELECT COUNT(*) AS total_orders FROM orders";
-$result_orders = mysqli_query($conn, $query_orders);
-$row_orders = mysqli_fetch_assoc($result_orders);
-$total_orders = $row_orders['total_orders'];
-
-// Fetch total customers
-$query_customers = "SELECT COUNT(*) AS total_customers FROM users WHERE role='customer'";
-$result_customers = mysqli_query($conn, $query_customers);
-$row_customers = mysqli_fetch_assoc($result_customers);
-$total_customers = $row_customers['total_customers'];
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>Admin Dashboard</title>
-</head>
-<body class="bg-gray-100 min-h-screen">
+    <title>E-Commerce Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
 
-    <div class="flex">
-        <!-- Sidebar -->
-        <div class="bg-indigo-500 text-white w-64 p-6">
-            <h2 class="text-2xl font-bold mb-6">Admin Dashboard</h2>
-            <nav>
-                <ul class="space-y-4">
-                    <li><a href="admin_dashboard.php" class="block py-2 px-4 rounded bg-indigo-600">Dashboard</a></li>
-                    <li><a href="viewproducts.php" class="block py-2 px-4 rounded hover:bg-indigo-600">View Products</a></li>
-                    <li><a href="insertproduct.php" class="block py-2 px-4 rounded hover:bg-indigo-600">Add New Product</a></li>
-                    <li><a href="vieworder.php" class="block py-2 px-4 rounded hover:bg-indigo-600">View Orders</a></li>
-                    <li><a href="viewcustomers.php" class="block py-2 px-4 rounded hover:bg-indigo-600">Manage Customers</a></li>
-                    <li><a href="reports.php" class="block py-2 px-4 rounded hover:bg-indigo-600">Reports</a></li>
-                    <li><a href="logout.php" class="block py-2 px-4 rounded hover:bg-indigo-600">Logout</a></li>
-                </ul>
-            </nav>
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .widget {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .chart-container {
+            height: 300px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            font-size: 16px;
+            color: #555;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>E-Commerce Dashboard</h1>
+
+    <div class="dashboard">
+        <!-- Revenue Widget -->
+        <div class="widget">
+            <h2>Total Revenue</h2>
+            <p class="text-2xl font-bold text-green-600">$<span id="totalRevenue">0</span></p>
         </div>
 
-        <!-- Main Content -->
-        <div class="container mx-auto p-6 flex-1">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Total Products -->
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-xl font-semibold text-gray-800">Total Products</h3>
-                    <p class="text-3xl font-bold text-indigo-600"><?php echo $total_products; ?></p>
-                </div>
+        <!-- Orders Line Chart -->
+        <div class="widget chart-container">
+            <h2>Orders Trend</h2>
+            <canvas id="ordersTrendChart"></canvas>
+        </div>
 
-                <!-- Total Orders -->
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-xl font-semibold text-gray-800">Total Orders</h3>
-                    <p class="text-3xl font-bold text-indigo-600"><?php echo $total_orders; ?></p>
-                </div>
+        <!-- Payment Methods Pie Chart -->
+        <div class="widget chart-container">
+            <h2>Payment Methods</h2>
+            <canvas id="paymentMethodsChart"></canvas>
+        </div>
 
-                <!-- Total Customers -->
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-xl font-semibold text-gray-800">Total Customers</h3>
-                    <p class="text-3xl font-bold text-indigo-600"><?php echo $total_customers; ?></p>
-                </div>
-            </div>
-
-            <!-- Additional Info Section -->
-            <div class="mt-8">
-                <h3 class="text-2xl font-semibold text-gray-800 mb-4">Recent Orders</h3>
-                <!-- Fetch and display recent orders -->
-                <?php
-                $query_recent_orders = "SELECT * FROM orders ORDER BY order_date DESC LIMIT 5";
-                $result_recent_orders = mysqli_query($conn, $query_recent_orders);
-                while ($order = mysqli_fetch_assoc($result_recent_orders)) {
-                    echo "<div class='bg-white p-4 mb-4 rounded-lg shadow-md'>";
-                    echo "<p class='text-gray-700'><strong>Order ID:</strong> " . $order['id'] . "</p>";
-                    echo "<p class='text-gray-700'><strong>User ID:</strong> " . $order['user_id'] . "</p>";
-                    echo "<p class='text-gray-700'><strong>Status:</strong> " . ucfirst($order['status']) . "</p>";
-                    echo "<p class='text-gray-700'><strong>Total Amount:</strong> $" . number_format($order['total_amount'], 2) . "</p>";
-                    echo "</div>";
-                }
-                ?>
-            </div>
+        <!-- Top Products -->
+        <div class="widget">
+            <h2>Top Products</h2>
+            <ul id="topProductsList"></ul>
         </div>
     </div>
 
+    <script>
+        // Example data (replace with data from your PHP backend)
+        const totalRevenue = 12000.50; // Replace with actual revenue
+        const ordersTrendData = [
+            { date: "2023-01", total_orders: 30 },
+            { date: "2023-02", total_orders: 45 },
+            { date: "2023-03", total_orders: 50 },
+        ];
+        const paymentMethodsData = [
+            { payment_method: "Credit Card", total_orders: 120 },
+            { payment_method: "PayPal", total_orders: 80 },
+            { payment_method: "Bank Transfer", total_orders: 40 },
+        ];
+        const topProducts = [
+            { name: "Running Shoes", total_sold: 120 },
+            { name: "Fitness Tracker", total_sold: 95 },
+            { name: "Yoga Mat", total_sold: 85 },
+        ];
+
+        // Update total revenue
+        document.getElementById("totalRevenue").textContent = totalRevenue.toFixed(2);
+
+        // Orders Trend Chart
+        const ordersLabels = ordersTrendData.map(item => item.date);
+        const ordersValues = ordersTrendData.map(item => item.total_orders);
+        new Chart(document.getElementById("ordersTrendChart"), {
+            type: "line",
+            data: {
+                labels: ordersLabels,
+                datasets: [{
+                    label: "Orders",
+                    data: ordersValues,
+                    borderColor: "#007bff",
+                    backgroundColor: "rgba(0, 123, 255, 0.2)",
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true },
+                    x: { title: { display: true, text: "Month" } },
+                }
+            }
+        });
+
+        // Payment Methods Pie Chart
+        const paymentLabels = paymentMethodsData.map(item => item.payment_method);
+        const paymentValues = paymentMethodsData.map(item => item.total_orders);
+        new Chart(document.getElementById("paymentMethodsChart"), {
+            type: "pie",
+            data: {
+                labels: paymentLabels,
+                datasets: [{
+                    data: paymentValues,
+                    backgroundColor: ["#28a745", "#ffc107", "#17a2b8"]
+                }]
+            },
+            options: {
+                responsive: true,
+            }
+        });
+
+        // Top Products List
+        const topProductsList = document.getElementById("topProductsList");
+        topProducts.forEach(product => {
+            const li = document.createElement("li");
+            li.textContent = `${product.name}: ${product.total_sold} sold`;
+            topProductsList.appendChild(li);
+        });
+    </script>
 </body>
+
 </html>

@@ -83,7 +83,7 @@
                 </div>
                 <div class="bg-gray-400 bg-opacity-80 rounded-lg p-6 shadow-lg hover:scale-105 transition-transform duration-300">
                     <img src="/images/team member4.png" alt="Team Member 4" class="rounded-full h-32 w-32 mx-auto mb-4">
-                    <h3 class="text-xl font-bold text-gray-700">Michael Lee</h3>
+                    <h3 class="text-xl font-bold text-gray-7 00">Michael Lee</h3>
                     <p class="text-gray-300">Operations Manager</p>
                 </div>
             </div>
