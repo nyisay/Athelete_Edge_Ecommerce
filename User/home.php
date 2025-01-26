@@ -178,7 +178,7 @@ if (isset($_SESSION['userLoginSuccess'])) {
                     Your browser does not support the video tag.
                 </video>
                 <!-- Overlay Content -->
-                <div class="absolute bottom-4 right-4 text-white p-4">
+                <div class="absolute bottom-4 right-4 text-gray-700 p-4">
                     <h3 class="text-xl font-semibold mb-2">Jordan Heir Series PF</h3>
                     <button class="bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600 transition duration-300">
                         Check
@@ -193,7 +193,7 @@ if (isset($_SESSION['userLoginSuccess'])) {
                     Your browser does not support the video tag.
                 </video>
                 <!-- Overlay Content -->
-                <div class="absolute bottom-4 right-4 text-white p-4">
+                <div class="absolute bottom-4 right-4 text-gray-700 p-4">
                     <h3 class="text-xl font-semibold mb-2">Nike Dri-FIT Rise 365</h3>
                     <button class="bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600 transition duration-300">
                         Check
@@ -208,7 +208,7 @@ if (isset($_SESSION['userLoginSuccess'])) {
                     Your browser does not support the video tag.
                 </video>
                 <!-- Overlay Content -->
-                <div class="absolute bottom-4 right-4 text-white p-4">
+                <div class="absolute bottom-4 right-4 text-gray-s p-4">
                     <h3 class="text-xl font-semibold mb-2">Zion 3 PF</h3>
                     <button class="bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600 transition duration-300">
                         Check
