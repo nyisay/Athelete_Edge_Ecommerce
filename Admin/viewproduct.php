@@ -79,9 +79,8 @@ if (isset($_SESSION['adminLoginSuccess'])) {
         </div>
     <?php } ?>
 
-
     <!-- Sidebar -->
-    <div class="bg-gray-800 text-white w-64 p-6">
+    <div class="bg-gray-800 text-white w-64 p-6 sticky top-0 h-screen">
         <h2 class="text-2xl font-bold mb-6">Admin Dashboard</h2>
         <nav>
             <ul class="space-y-4">
@@ -155,5 +154,6 @@ if (isset($_SESSION['adminLoginSuccess'])) {
         </div>
     </div>
 </body>
+
 
 </html>

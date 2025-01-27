@@ -104,37 +104,43 @@ if (isset($_GET['product_id'])) {
     <title>Update Product</title>
 </head>
 
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
-    <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-lg">
-        <h1 class="text-2xl font-bold mb-4 text-gray-800">Update Product</h1>
-        <form method="post" action="<?php $_SERVER['PHP_SELF'] ?>?product_id=<?= $product_id ?>" class="space-y-4" enctype="multipart/form-data">
+<body class="bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen flex items-center justify-center">
+    <div class="bg-white shadow-lg rounded-2xl p-8 w-full max-w-2xl">
+        <div class="flex items-center mb-6">
+            <img src="/images/logoedit.png" alt="Logo" class="h-12 w-12 mr-4">
+            <h1 class="text-3xl font-extrabold text-gray-800">Update Product</h1>
+        </div>
+        <form method="post" action="<?php $_SERVER['PHP_SELF'] ?>?product_id=<?= $product_id ?>" class="space-y-6" enctype="multipart/form-data">
             <div>
                 <label for="name" class="block text-sm font-medium text-gray-700">Product Name</label>
                 <input type="text" id="name" name="name" value="<?= $product['name'] ?>" required
-                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                    class="mt-2 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
             </div>
 
             <div>
                 <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
                 <textarea id="description" name="description" rows="4" required
-                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"><?= $product['description'] ?></textarea>
+                    class="mt-2 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"><?= $product['description'] ?></textarea>
             </div>
 
-            <div>
-                <label for="price" class="block text-sm font-medium text-gray-700">Price ($)</label>
-                <input type="number" id="price" name="price" step="0.01" value="<?= $product['price'] ?>" required
-                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
-            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="price" class="block text-sm font-medium text-gray-700">Price ($)</label>
+                    <input type="number" id="price" name="price" step="0.01" value="<?= $product['price'] ?>" required
+                        class="mt-2 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
 
-            <div>
-                <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
-                <input type="number" id="quantity" name="quantity" value="<?= $product['quantity'] ?>" required
-                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                <div>
+                    <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
+                    <input type="number" id="quantity" name="quantity" value="<?= $product['quantity'] ?>" required
+                        class="mt-2 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
             </div>
 
             <div>
                 <label for="categories" class="block text-sm font-medium text-gray-700">Category</label>
-                <select id="categories" name="categories" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                <select id="categories" name="categories"
+                    class="mt-2 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="" disabled>Select Category</option>
                     <?php
                     try {
@@ -153,6 +159,7 @@ if (isset($_GET['product_id'])) {
                 </select>
             </div>
 
+            <div class="space-y-4">
             <div>
                 <label for="image" class="block text-sm font-medium text-gray-700">Product Image</label>
                 <input type="file" id="image" name="image" accept="image/*"
@@ -183,9 +190,10 @@ if (isset($_GET['product_id'])) {
                     class="mt-1 block w-full text-gray-700 bg-gray-50 border border-gray-300 rounded-md shadow-sm">
                 <p class="mt-2 text-sm text-gray-600">Current Image: <?= basename($product['fifth_image']) ?></p>
             </div>
+            </div>
 
             <button type="submit" name="update"
-                class="w-full bg-indigo-500 text-white py-2 px-4 rounded-md shadow hover:bg-indigo-600">
+                class="w-full bg-indigo-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-indigo-600 focus:outline-none focus:ring-4 focus:ring-indigo-400">
                 Update Product
             </button>
         </form>

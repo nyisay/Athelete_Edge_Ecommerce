@@ -93,7 +93,7 @@ if (isset($_POST['insert'])) {
 
     <div class="flex">
         <!-- Sidebar -->
-        <div class="bg-gray-800 text-white w-64 p-6">
+        <div class="bg-gray-800 text-white w-64 p-6 sticky top-0 h-screen">
             <h2 class="text-2xl font-bold mb-6">Admin Dashboard</h2>
             <nav>
                 <ul class="space-y-4">
@@ -111,7 +111,10 @@ if (isset($_POST['insert'])) {
         <!-- Main Content -->
         <div class="container mx-auto p-6 flex-1">
             <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-lg mx-auto">
-                <h1 class="text-2xl font-bold mb-4 text-gray-800">Add New Product</h1>
+                <div class="flex items-center mb-4">
+                    <img src="/images//logoedit.png" alt="Logo" class="h-10 w-10 mr-2">
+                    <h1 class="text-2xl font-bold text-gray-800">Add New Product</h1>
+                </div>
                 <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" class="space-y-4" enctype="multipart/form-data">
                     <!-- Product Name -->
                     <div>

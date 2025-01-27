@@ -215,7 +215,7 @@ if ($product) {
                             </h3>
                             <!-- <p class="text-gray-600 mb-2"><?php echo $related['description']; ?></p> -->
                             <span class="text-xl font-bold text-blue-600">$<?php echo $related['price']; ?></span>
-                            <div class="mt-auto flex justify-center space-x-4">
+                            <div class="mt-10 flex justify-center space-x-4">
                                 <?php if ($user_id) { ?>
                                     <a href="addCart.php?product_id=<?php echo $related['product_id']; ?>"
                                         class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition">

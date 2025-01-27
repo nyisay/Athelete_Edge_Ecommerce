@@ -41,7 +41,7 @@ try {
 
     <div class="flex">
         <!-- Sidebar -->
-        <div class="bg-gray-800 text-white w-64 p-6">
+        <div class="bg-gray-800 text-white w-64 p-6 sticky top-0 h-screen">
             <h2 class="text-2xl font-bold mb-6">Admin Dashboard</h2>
             <nav>
                 <ul class="space-y-4">
@@ -58,12 +58,15 @@ try {
 
         <!-- Main Content -->
         <div class="container mx-auto p-6 flex-1">
-            <h1 class="text-2xl font-bold mb-4 text-gray-800">All Customers</h1>
+            <div class="flex items-center mb-4">
+                <img src="/images//logoedit.png" alt="Logo" class="h-10 w-10 mr-2">
+                <h1 class="text-2xl font-bold text-gray-800">All Customer</h1>
+            </div>
 
             <!-- Show session message if exists -->
             <?php if (isset($_SESSION['status_message'])) : ?>
                 <div class="bg-green-500 text-white p-4 rounded-md mb-4">
-                    <?php 
+                    <?php
                     echo $_SESSION['status_message'];
                     unset($_SESSION['status_message']); // Clear the message after showing it
                     ?>
@@ -108,4 +111,3 @@ try {
 </body>
 
 </html>
-
