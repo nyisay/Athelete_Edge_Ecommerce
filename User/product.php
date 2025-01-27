@@ -88,9 +88,9 @@ try {
         <div class="container mx-auto px-4">
             <h2 class="text-4xl font-extrabold text-center text-gray-800 mb-12">Our Products</h2>
 
-            <div class="flex flex-col lg:flex-row gap-10">
-                <!-- Filter Form -->
-                <div class="w-full lg:w-1/4 bg-white p-6 rounded-lg shadow-lg">
+            <div class="flex flex-wrap lg:flex-nowrap gap-6">
+                <!-- Product Filter -->
+                <div class="w-full lg:w-1/4 bg-white p-6 rounded-lg shadow-lg sticky top-6 h-max">
                     <form id="filter-form" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
                         <h3 class="text-2xl font-semibold text-gray-800 mb-6">Filter Products</h3>
 
@@ -167,6 +167,7 @@ try {
                     </div>
                 </div>
             </div>
+
         </div>
     </section>
 
