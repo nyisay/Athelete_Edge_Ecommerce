@@ -102,7 +102,6 @@ if (isset($_POST['insert'])) {
                     <li><a href="insertproduct.php" class="block py-2 px-4 rounded bg-yellow-600">Add New Product</a></li>
                     <li><a href="vieworder.php" class="block py-2 px-4 rounded hover:bg-yellow-600">View Orders</a></li>
                     <li><a href="viewcustomers.php" class="block py-2 px-4 rounded hover:bg-yellow-600">Manage Customers</a></li>
-                    <li><a href="reports.php" class="block py-2 px-4 rounded hover:bg-yellow-600">Reports</a></li>
                     <li><a href="logout.php" class="block py-2 px-4 rounded hover:bg-yellow-600">Logout</a></li>
                 </ul>
             </nav>

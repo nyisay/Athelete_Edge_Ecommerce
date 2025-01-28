@@ -12,6 +12,8 @@ if (!isset($_SESSION['user_id'])) {
 }
 $user_id = $_SESSION['user_id'];
 
+$total = 0; // Initialize total variable
+
 try {
     // Fetch cart items for the logged-in user
     $sql = "SELECT cart.product_id, products.name, products.price, products.image, cart.quantity 
@@ -22,6 +24,11 @@ try {
     $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $stmt->execute();
     $cart_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Calculate the total before form submission
+    foreach ($cart_items as $item) {
+        $total += $item['price'] * $item['quantity'];
+    }
 
     // Fetch payment methods
     $payment_sql = "SELECT payment_method_id, payment_name FROM payment_method";
@@ -35,10 +42,15 @@ try {
 
 // Handle the payment submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment'])) {
-    $status = "pending";    
+    $status = "pending";
     $order_date = date('Y-m-d H:i:s');
     $payment_method_id = $_POST['payment_method'];
-    $total = array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart_items));
+
+    // Calculate total by multiplying price and quantity
+    $total = 0; // Reset total before recalculating it
+    foreach ($cart_items as $item) {
+        $total += $item['price'] * $item['quantity'];
+    }
 
     try {
         // Insert the order into the database
@@ -73,9 +85,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment'])) {
         $stmt_clear_cart->bindParam(':user_id', $user_id, PDO::PARAM_INT);
         $stmt_clear_cart->execute();
 
-        // echo "Order placed successfully!";
-        header('Location: ordercomplete.php');
         // Redirect to confirmation page or clear cart, if needed
+        header('Location: ordercomplete.php');
+        exit();
     } catch (PDOException $e) {
         echo "Error placing order: " . $e->getMessage();
         exit();
@@ -91,6 +103,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .payment-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .payment-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .payment-card.selected {
+            border-color: #ef4444;
+            /* Tailwind Red-600 */
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
+            transform: scale(1.05);
+        }
+    </style>
 </head>
 
 <body class="bg-[url('../images/background.png')] bg-cover bg-center bg-no-repeat">
@@ -139,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment'])) {
                                     <h3 class="font-semibold text-gray-800"><?php echo htmlspecialchars($item['name']); ?></h3>
                                     <p class="text-gray-600">Quantity: <?php echo htmlspecialchars($item['quantity']); ?></p>
                                 </div>
-                                <p class="font-bold text-gray-800">$<?php echo number_format($item['price'], 2); ?></p>
+                                <p class="font-bold text-gray-800">$<?php echo number_format($item['price'] * $item['quantity'], 2); ?></p>
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
@@ -151,7 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment'])) {
                     <div class="flex justify-between items-center">
                         <span class="text-lg font-medium text-gray-800">Total:</span>
                         <span class="text-lg font-bold text-gray-800">
-                            $<?php echo number_format(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart_items)), 2); ?>
+                            $<?php echo number_format($total, 2); ?>
                         </span>
                     </div>
                 </div>
@@ -161,18 +190,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment'])) {
             <div class="flex-1 bg-white shadow-md rounded-lg p-6">
                 <h2 class="text-xl font-medium text-gray-800 mb-4">Payment Details</h2>
                 <form action="" method="POST" class="space-y-4">
-                    <!-- Payment Method -->
+                    <!-- Payment Methods -->
                     <div>
-                        <label for="payment_method" class="block text-gray-700 font-medium mb-1">Payment Method</label>
-                        <select id="payment_method" name="payment_method" class="w-full p-3 border rounded-md" required>
+                        <label class="block text-gray-700 font-medium mb-2">Choose a Payment Method</label>
+                        <div class="grid grid-cols-2 gap-4" id="payment-methods">
+                            <?php
+                            $payment_icons = [
+                                'Credit Card' => '/images/creditcard.png',
+                                'Debit Card' => '/images/debit card.png',
+                                'Cash On Delivery' => '/images/cod.png',
+                                'K pay' => '/images/Kpay.png',
+                            ];
+                            ?>
                             <?php foreach ($payment_methods as $method): ?>
-                                <option value="<?php echo htmlspecialchars($method['payment_method_id']); ?>">
-                                    <?php echo htmlspecialchars($method['payment_name']); ?>
-                                </option>
+                                <?php
+                                $icon = $payment_icons[$method['payment_name']] ?? '/images/icons/default.png';
+                                ?>
+                                <label class="payment-card flex items-center gap-3 p-4 border rounded-lg cursor-pointer">
+                                    <input
+                                        type="radio"
+                                        name="payment_method"
+                                        value="<?php echo htmlspecialchars($method['payment_method_id']); ?>"
+                                        class="hidden">
+                                    <img src="<?php echo htmlspecialchars($icon); ?>"
+                                        alt="<?php echo htmlspecialchars($method['payment_name']); ?>"
+                                        class="w-10 h-10">
+                                    <span class="text-gray-800 font-medium"><?php echo htmlspecialchars($method['payment_name']); ?></span>
+                                </label>
                             <?php endforeach; ?>
-                        </select>
+                        </div>
                     </div>
-                    <!-- Submit -->
+                    <!-- Submit Button -->
                     <button type="submit" name="payment" class="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition">
                         Complete Payment
                     </button>
@@ -180,6 +228,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment'])) {
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const paymentCards = document.querySelectorAll('.payment-card');
+            paymentCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    paymentCards.forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    card.querySelector('input[type="radio"]').checked = true;
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

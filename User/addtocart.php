@@ -1,4 +1,3 @@
-
 <?php
 // Start session
 session_start();
@@ -54,7 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove']) && isset($_
         echo "Error removing product from cart: " . $e->getMessage();
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -75,8 +73,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove']) && isset($_
 <?php include 'header.php'; ?>
 
 <body class="bg-[url('../images/background.png')] bg-cover bg-center bg-no-repeat">
-
-    
 
     <!-- Cart Section -->
     <section class="py-16 rounded-lg shadow-lg backdrop-blur-md mx-4 md:mx-auto max-w-6xl">
@@ -102,7 +98,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove']) && isset($_
                                         <span id="quantity<?php echo $product['product_id']; ?>" class="text-lg font-bold"><?php echo $product['quantity']; ?></span>
                                         <button class="bg-gray-200 text-gray-600 px-4 py-2 rounded hover:bg-gray-300 transition" onclick="increaseQuantity('<?php echo $product['product_id']; ?>')">+</button>
                                     </div>
-                                    <span class="text-lg font-bold text-blue-600">$<?php echo number_format($subtotal, 2); ?></span>
+                                    <span id="price<?php echo $product['product_id']; ?>" data-unit-price="<?php echo $product['price']; ?>" class="text-lg font-bold text-blue-600">
+                                        $<?php echo number_format($subtotal, 2); ?>
+                                    </span>
                                     <form method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
                                         <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
                                         <button type="submit" name="remove" class="bg-gray-200 text-gray-600 px-4 py-2 rounded hover:bg-gray-300 transition">
@@ -132,47 +130,77 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove']) && isset($_
             </div>
         </div>
     </section>
+
     <script>
-        function increaseQuantity(quantityId) {
-            const quantityElement = document.getElementById(quantityId);
+        const userId = <?php echo $_SESSION['user_id']; ?>; // Assuming `$_SESSION['user_id']` is set in PHP.
+
+        function updateCart(productId, quantity) {
+            fetch('update_cart.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        product_id: productId,
+                        quantity: quantity
+                    })
+                })
+                .then(response => response.text()) // Convert the response to text
+                .then(text => {
+                    return JSON.parse(text); // Try to parse it as JSON
+                })
+                .then(data => {
+                    if (data.success) {
+                        console.log('Cart updated successfully:', data.message);
+                    } else {
+                        alert('Failed to update cart: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating cart:', error);
+                    alert('An error occurred while updating the cart. Please try again later.');
+                });
+        }
+
+        function increaseQuantity(productId) {
+            const quantityElement = document.getElementById(`quantity${productId}`);
             let quantity = parseInt(quantityElement.innerText);
             quantity += 1;
             quantityElement.innerText = quantity;
-            updatePrice(quantityId, quantity);
+            updateCart(productId, quantity);
+            updatePrice(productId, quantity);
         }
 
-        function decreaseQuantity(quantityId) {
-            const quantityElement = document.getElementById(quantityId);
+        function decreaseQuantity(productId) {
+            const quantityElement = document.getElementById(`quantity${productId}`);
             let quantity = parseInt(quantityElement.innerText);
             if (quantity > 1) {
                 quantity -= 1;
                 quantityElement.innerText = quantity;
-                updatePrice(quantityId, quantity);
+                updateCart(productId, quantity);
+                updatePrice(productId, quantity);
             }
         }
 
-        function updatePrice(quantityId, quantity) {
-            let priceElement;
-            if (quantityId === 'quantity1') {
-                priceElement = document.getElementById('price1');
-            } else if (quantityId === 'quantity2') {
-                priceElement = document.getElementById('price2');
-            }
-
-            const unitPrice = 49.99; // Unit price of the product
-            const totalPrice = (unitPrice * quantity).toFixed(2);
-            priceElement.innerText = `$${totalPrice}`;
+        function updatePrice(productId, quantity) {
+            const priceElement = document.getElementById(`price${productId}`);
+            const unitPrice = parseFloat(priceElement.dataset.unitPrice); // Fetch unit price dynamically
+            const subtotal = (unitPrice * quantity).toFixed(2);
+            priceElement.innerText = `$${subtotal}`;
             updateTotal();
         }
 
         function updateTotal() {
-            const quantity1 = parseInt(document.getElementById('quantity1').innerText);
-            const quantity2 = parseInt(document.getElementById('quantity2').innerText);
-            const totalPrice = (49.99 * quantity1 + 49.99 * quantity2).toFixed(2);
-            document.querySelector('.text-2xl').innerText = `Total: $${totalPrice}`;
+            let total = 0;
+            const priceElements = document.querySelectorAll("[id^='price']");
+            priceElements.forEach((priceElement) => {
+                total += parseFloat(priceElement.innerText.replace('$', ''));
+            });
+            document.querySelector('.text-2xl').innerText = `Total: $${total.toFixed(2)}`;
         }
     </script>
-</body>
 
+</body>
 
 </html>
